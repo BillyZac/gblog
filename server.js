@@ -1,16 +1,23 @@
 var express = require('express')
-var app = express()
 var pg = require('pg')
+var bodyParser = require('body-parser')
+
+var app = express()
 var connectionString = 'postgres://localhost/gblog'
+
+app.use(bodyParser.urlencoded({ extended: false }))
 
 //======== Posts ========
 //Create
-app.post('/posts/new', function(request, response) {
+app.post('/posts', function(request, response) {
+  console.log(request.body)
+  var creationTime = Date.now()
   pg.connect(connectionString, function(err, client, done) {
-    client.query('INSERT INTO post VALUES (default, $1, $2, $3)',
-    ['This is a title.',
-     'This is a body.',
-     'This is an author.'],
+    client.query('INSERT INTO post VALUES (default, $1, $2, $3, $4)',
+    [request.body.title,
+     request.body.body,
+     request.body.author,
+     creationTime],
     function(err, results) {
       done()
       if (err){
