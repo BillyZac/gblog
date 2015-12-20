@@ -1,7 +1,7 @@
 var express = require('express')
 var pg = require('pg')
 var bodyParser = require('body-parser')
-
+var api = require('./api')
 var app = express()
 var connectionString = 'postgres://localhost/gblog'
 
@@ -31,14 +31,7 @@ app.post('/posts', function(request, response) {
 
 //Read all
 app.get('/posts', function(request, response) {
-  pg.connect(connectionString, function(err, client, done) {
-    client.query('SELECT * FROM post', function(err, results) {
-      if (err)
-        console.log(err)
-      done() // What does this do?
-      response.json(results)
-    })
-  })
+  api.read(response)
 })
 
 // Read one post
