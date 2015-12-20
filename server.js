@@ -29,7 +29,7 @@ app.post('/posts', function(request, response) {
   })
 })
 
-//Read
+//Read all
 app.get('/posts', function(request, response) {
   pg.connect(connectionString, function(err, client, done) {
     client.query('SELECT * FROM post', function(err, results) {
@@ -41,7 +41,23 @@ app.get('/posts', function(request, response) {
   })
 })
 
+// Read one post
+app.get('/posts/:id', function(request, response) {
+  pg.connect(
+    connectionString,
+    function(err, client, done) {
+      client.query(
+        'SELECT * FROM post WHERE id=$1',
+        [request.params.id],
+        function(err, results) {
+          done()
+          response.json(results)
+        })
+    })
+})
+
 //Update
+
 //Delete
 
 app.listen(8080, function() {
