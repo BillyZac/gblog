@@ -31,7 +31,7 @@ app.post('/posts', function(request, response) {
 
 //Read all
 app.get('/posts', function(request, response) {
-  api.read(response)
+  api.posts.read(response)
 })
 
 // Read one post
