@@ -79,7 +79,19 @@ app.put('/posts/:id', function(request, response) {
 })
 
 //Delete
-
+app.delete('/posts/:id', function(request, response) {
+  pg.connect(
+    connectionString,
+    function(err, client, done) {
+      client.query(
+        'DELETE FROM post WHERE id=$1',
+        [request.params.id],
+        function(err, results) {
+          done()
+          response.json(results)
+        }) // client.query
+    }) // pg.connect
+}) // app.delete
 
 
 app.listen(8080, function() {
