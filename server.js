@@ -57,6 +57,26 @@ app.get('/posts/:id', function(request, response) {
 })
 
 //Update
+app.put('/posts/:id', function(request, response) {
+  console.log(request.params)
+  pg.connect(
+    connectionString,
+    function(err, client, done) {
+      if (err)
+        console.log('Error on pg.connect:', err)
+      client.query(
+        'UPDATE post SET title=$2, body=$3 WHERE id=$1',
+        [request.params.id,
+        request.body.title,
+        request.body.body],
+        function(err, results) {
+          if (err)
+            console.log('Error on client.query:', err)
+          done()
+          response.json(results)
+        })
+    })
+})
 
 //Delete
 
