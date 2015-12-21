@@ -2,10 +2,15 @@ var express = require('express')
 var pg = require('pg')
 var bodyParser = require('body-parser')
 var api = require('./api')
+var timestamp = require('./timestamp')
+
 var app = express()
 var connectionString = 'postgres://localhost/gblog'
 
 app.use(bodyParser.urlencoded({ extended: false }))
+
+// Every request that comes in gets timestamped
+app.use(timestamp);
 
 //======== Posts ========
 // Read all posts

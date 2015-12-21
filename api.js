@@ -16,13 +16,14 @@ module.exports = {
   }, // posts
   post: {
     create: function(request, response) {
-      var creationTime = Date.now()
+      // console.log('THE BODEEEEEEEE========!', request)
+      // var creationTime = Date.now()
       pg.connect(connectionString, function(err, client, done) {
           client.query('INSERT INTO post VALUES (default, $1, $2, $3, $4)',
             [request.body.title,
              request.body.body,
              request.body.author,
-             creationTime],
+             request.body.creationTime],
             function(err, results) {
               if (err)
                 console.log(err)
