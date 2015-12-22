@@ -36,17 +36,46 @@ app.post('/signup', function(request, response) {
       done()
       response.send(results)
     })
-
-      // HERE IS THE CODE FOR THE GET ROUTE:
-    // client.query('SELECT * FROM api_user',
-    // function(err, results) {
-    //   if ('ERROR MAKING QUERY:',err)
-    //     console.log(err)
-    //   done()
-    //   response.send(results)
-    // })
   })
 })
+
+// Sign-in
+app.post('/signin', function(request, response) {
+  pg.connect(connectionString, function(err, client, done) {
+    client.query('SELECT * FROM api_user WHERE email=$1',
+    [request.body.email],
+    function(err, results) {
+      if (results.rows.length > 0) {
+        if (bcrypt.compareSync(request.body.password, results.rows[0].password_hash)) {
+          // user is authenticated
+          // put the user's id on the cookie.
+          // {signed: true} scrambles the id, instead of storing as plaintext
+          response.cookie('userID', results.rows[0].id, { signed: true })
+          response.send(true)
+        } else {
+          // pw did not match
+          response.send(false)
+        }
+      } else {
+        // No email found
+        response.send(false)
+      }
+    })
+  })
+})
+
+// Get all users
+app.get('/users', function(request, response) {
+  pg.connect(connectionString, function(err, client, done) {
+    client.query('SELECT * FROM api_user',
+    function(err, results) {
+      if ('ERROR MAKING QUERY:',err)
+      console.log(err)
+      done()
+      response.send(results.rows)
+    }) // client.query
+  }) // pg.connect
+}) // app.get
 
 //======== Posts ========
 // Read all posts
